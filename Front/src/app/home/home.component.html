@@ -158,22 +158,47 @@
                                 class="comment-list"
                                 *ngFor="let comment of post.comments"
                               >
-                                <div class="comment">
-                                  <h3>{{ comment.commenterUsername }}</h3>
-                                  <span
-                                    ><img src="images/clock.png" alt="" />
-                                    {{ comment.timestamp | date }}</span
-                                  >
-                                  <p>
-                                    {{ comment.text }}
-                                  </p>
+                                <div *ngIf="!updateMode[comment._id]">
+                                  <div class="comment">
+                                    <h3>{{ comment.commenterUsername }}</h3>
+                                    <span
+                                      ><img src="images/clock.png" alt="" />
+                                      {{ comment.timestamp | date }}</span
+                                    >
+                                    <p>
+                                      {{ comment.text }}
+                                    </p>
+                                    <button
+                                      *ngIf="user._id === comment.commenterId"
+                                      (click)="
+                                        deleteComment(post._id, comment._id)
+                                      "
+                                    >
+                                      Delete
+                                    </button>
+                                    <button
+                                      *ngIf="user._id === comment.commenterId"
+                                      (click)="activateUpdateMode(comment)"
+                                    >
+                                      Update
+                                    </button>
+                                  </div>
+                                </div>
+                                <div *ngIf="updateMode[comment._id]">
+                                  <input
+                                    type="text"
+                                    [(ngModel)]="commentText"
+                                  />
                                   <button
-                                    *ngIf="user._id === comment.commenterId"
                                     (click)="
-                                      deleteComment(post._id, comment._id)
+                                      updateComment(
+                                        post._id,
+                                        comment._id,
+                                        commentText
+                                      )
                                     "
                                   >
-                                    Delete
+                                    Confirm
                                   </button>
                                 </div>
                               </div>

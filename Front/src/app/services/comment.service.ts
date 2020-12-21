@@ -39,5 +39,12 @@ export class CommentService {
       `${this.rootUrl}/post/delete-comment-post/${postId}/${commentId}`
     );
   }
+
+  updateComment(postId, commentId, text) {
+    return this.http.patch(`${this.rootUrl}/post/edit-comment-post/${postId}`, {
+      commentId,
+      text,
+    });
+  }
   //delete a comment
 }

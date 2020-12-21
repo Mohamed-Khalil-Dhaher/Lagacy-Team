@@ -21,6 +21,9 @@ export class HomeComponent implements OnInit {
   friendsOfFriends = new Array();
   isOpen: any;
   post: Post;
+  updateMode: any = {};
+  commentToUpdate: String = '';
+  commentText: String = '';
   comment: Comment;
   picture: any | undefined;
   idpost: any | undefined;
@@ -160,10 +163,43 @@ export class HomeComponent implements OnInit {
   //methode delete
   deleteComment(postId: any, commentId: any) {
     this.commentService.deleteComment(postId, commentId).subscribe(() => {
-      console.log('deleting');
-      // this.post.comments = this.post.comments.filter(comment => {
-      //   return comment._id != commentId
-      // })
+      this.posts.forEach((post) => {
+        if (post._id === postId) {
+          post.comments = post.comments.filter((comment) => {
+            return comment._id !== commentId;
+          });
+        }
+      });
     });
+  }
+
+  activateUpdateMode(comment) {
+    this.updateMode[comment._id] = true;
+    this.commentToUpdate = comment._id;
+    this.commentText = comment.text;
+  }
+
+  disableUpdateMode(commentId) {
+    this.updateMode[commentId] = false;
+    this.commentToUpdate = '';
+    this.commentText = '';
+  }
+
+  //methode update
+  updateComment(postId, commentId, text) {
+    this.commentService
+      .updateComment(postId, commentId, text)
+      .subscribe((result) => {
+        this.posts.forEach((post) => {
+          if (post._id === postId) {
+            post.comments.forEach((comment) => {
+              if (comment._id === commentId) {
+                comment.text = text;
+                this.disableUpdateMode(commentId);
+              }
+            });
+          }
+        });
+      });
   }
 }

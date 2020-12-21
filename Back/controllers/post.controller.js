@@ -206,6 +206,9 @@ module.exports.commentPost = (req, res) => {
 };
 
 module.exports.editCommentPost = (req, res) => {
+  console.log(req.params.id);
+  console.log(req.body.commentId);
+  console.log(req.body);
   if (!ObjectID.isValid(req.params.id))
     return res.status(400).send("Id unknown : " + req.params.id);
   try {
@@ -237,7 +240,7 @@ module.exports.deleteCommentPost = (req, res) => {
       {
         $pull: {
           comments: {
-            _id: req.params.id2 
+            _id: req.params.id2
           }
         }
       },
